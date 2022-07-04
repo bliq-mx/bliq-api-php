@@ -1,0 +1,32 @@
+{
+    "name": "bliq-mx/bliq-api-php",
+    "description": "Biblioteca para conectar con la API de timbrado de Bliq",
+    "keywords": ["sat", "cfdi", "timbrado"],
+    "homepage": "https://github.com/bliq-mx/bliq-stamp-api",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bliq",
+            "email": "hola@bliq.mx",
+            "homepage": "https://bliq.mx/"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/bliq-mx/bliq-stamp-api",
+        "issues": "https://github.com/bliq-mx/bliq-stamp-api/issues"
+    },
+    "prefer-stable": true,
+    "config": {
+        "optimize-autoloader": true
+    },
+    "require": {
+        "php": ">=7.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bliq\\Stamp\\": "src/"
+        }
+    }
+}
