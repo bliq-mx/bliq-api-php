@@ -159,6 +159,24 @@ class BliqStampApi
     }
 
     /**
+     * Registra un certificado para utilizarlo posteriormente
+     * @throws BliqStampApiException
+     */
+    public function registrarCertificado(Certificado $certificado)
+    {
+        $data = [
+            'cer_data' => base64_encode($certificado->cer()),
+            'key_data' => base64_encode($certificado->key()),
+            'key_passphrase' => $certificado->passphrase(),
+        ];
+        $resultData = $this->post('certificado_registrar', $data);
+
+        if (empty($resultData['success'])) {
+            throw new BliqStampApiException($resultData['message'] ?? 'Error no especificado');
+        }
+    }
+
+    /**
      * Realiza petición por método GET
      * @param string $endpoint Punto al que se hará la petición
      * @param array|null $params Parámetros a incluir en la petición
