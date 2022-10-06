@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Bliq\Stamp\Result;
+namespace Bliq\Api\StampResults;
 
-class CrearPdfResult
+class CreatePdfResult
 {
     /** @var string */
     private $data;

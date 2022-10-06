@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Bliq\Stamp;
+namespace Bliq\Api\Exception;
 
 use DomainException;
 
-class BliqStampApiException extends DomainException
+class BliqApiException extends DomainException
 {
     /** @var array */
     private $errors = [];

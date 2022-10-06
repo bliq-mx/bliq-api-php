@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Bliq\Stamp;
+namespace Bliq\Api;
 
-use Bliq\Stamp\Result\CancelarCfdiResult;
-use Bliq\Stamp\Result\CrearCfdiResult;
-use Bliq\Stamp\Result\CrearPdfResult;
-use Bliq\Stamp\Result\FirmaManifiestoResult;
-use Bliq\Stamp\Result\RecuperarCfdiResult;
-use Bliq\Stamp\ValueObject\Certificado;
+use Bliq\Api\Exception\BliqApiException;
+use Bliq\Api\StampResults\CancelCfdiResult;
+use Bliq\Api\StampResults\CreateCfdiResult;
+use Bliq\Api\StampResults\CreatePdfResult;
+use Bliq\Api\StampResults\FetchCfdiResult;
+use Bliq\Api\ValueObject\Certificado;
 
 class BliqStampApi
 {
@@ -34,13 +34,13 @@ class BliqStampApi
         $this->token = $token;
 
         if (empty($this->token)) {
-            throw new BliqStampApiException('El token no ha sido establecido.', 10);
+            throw new BliqApiException('El token no ha sido establecido.', 10);
         }
     }
 
     /**
      * Crea y obtiene el XML de un CFDI
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
     public function crearXml40(array $data): array
     {
@@ -49,9 +49,9 @@ class BliqStampApi
 
     /**
      * Realiza la creación y el timbrado de un CFDI utilizando los datos del certificado.
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
-    public function createCfdi40WithCertFiles(array $comprobante, Certificado $certificado): CrearCfdiResult
+    public function createCfdi40WithCertFiles(array $comprobante, Certificado $certificado): CreateCfdiResult
     {
         $params = [
             'Comprobante' => $comprobante,
@@ -60,14 +60,14 @@ class BliqStampApi
             'key_passphrase' => $certificado->passphrase(),
         ];
         $response = $this->post('crear_cfdi', $params);
-        return new CrearCfdiResult($response);
+        return new CreateCfdiResult($response);
     }
 
     /**
      * Realiza la creación y el timbrado de un CFDI utilizando el número de certificado.
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
-    public function createCfdi40WithCertNumber(array $comprobante, string $certNumber, string $rfc): CrearCfdiResult
+    public function createCfdi40WithCertNumber(array $comprobante, string $certNumber, string $rfc): CreateCfdiResult
     {
         $params = [
             'Comprobante' => $comprobante,
@@ -75,58 +75,58 @@ class BliqStampApi
             'rfc' => $rfc,
         ];
         $response = $this->post('crear_cfdi', $params);
-        return new CrearCfdiResult($response);
+        return new CreateCfdiResult($response);
     }
 
     /**
      * Obtiene el PDF de un XML mediante el UUID
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
-    public function createPdfByUUID(string $uuid, array $params = []): CrearPdfResult
+    public function createPdfByUUID(string $uuid, array $params = []): CreatePdfResult
     {
         $params['uuid'] = $uuid;
         $response = $this->post('crear_pdf', $params);
-        return new CrearPdfResult($response);
+        return new CreatePdfResult($response);
     }
 
     /**
      * Obtiene el PDF de un XML mediante el XML
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
-    public function createPdfByXML(string $xml, array $params = []): CrearPdfResult
+    public function createPdfByXML(string $xml, array $params = []): CreatePdfResult
     {
         $params['xml'] = $xml;
         $response = $this->post('crear_pdf', $params);
-        return new CrearPdfResult($response);
+        return new CreatePdfResult($response);
     }
 
     /**
      * Obtiene el PDF de un XML mediante los datos para crear un CFDI
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
-    public function createPdfByData(array $comprobante, array $params = []): CrearPdfResult
+    public function createPdfByData(array $comprobante, array $params = []): CreatePdfResult
     {
         $params['Comprobante'] = $comprobante;
         $response = $this->post('crear_pdf', $params);
-        return new CrearPdfResult($response);
+        return new CreatePdfResult($response);
     }
 
     /**
      * Realiza la recuperación de un CFDI
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
-    public function getXmlByUUID(string $uuid): RecuperarCfdiResult
+    public function getXmlByUUID(string $uuid): FetchCfdiResult
     {
         $data = ['uuid' => $uuid];
         $response = $this->post('recuperar_cfdi', $data);
-        return new RecuperarCfdiResult($response);
+        return new FetchCfdiResult($response);
     }
 
     /**
      * Realiza la cancelación de un CFDI
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
-    public function cancelCfdi(string $uuid, string $motivo, string $folioSustitucion, Certificado $certData): CancelarCfdiResult
+    public function cancelCfdi(string $uuid, string $motivo, string $folioSustitucion, Certificado $certData): CancelCfdiResult
     {
         $data = [
             'uuid' => $uuid,
@@ -137,14 +137,14 @@ class BliqStampApi
             'key_passphrase' => $certData->passphrase(),
         ];
         $response = $this->post('cancelar_cfdi', $data);
-        return new CancelarCfdiResult($response);
+        return new CancelCfdiResult($response);
     }
 
     /**
      * Realiza la firma del manifiesto
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
-    public function firmarManifiesto(Certificado $certificado)
+    public function signManifiest(Certificado $certificado)
     {
         $data = [
             'cer_data' => base64_encode($certificado->cer()),
@@ -154,15 +154,15 @@ class BliqStampApi
         $resultData = $this->post('firmar_manifiesto', $data);
 
         if (empty($resultData['success'])) {
-            throw new BliqStampApiException($resultData['message'] ?? 'Error no especificado');
+            throw new BliqApiException($resultData['message'] ?? 'Error no especificado');
         }
     }
 
     /**
      * Registra un certificado para utilizarlo posteriormente
-     * @throws BliqStampApiException
+     * @throws BliqApiException
      */
-    public function registrarCertificado(Certificado $certificado)
+    public function registerCertificate(Certificado $certificado)
     {
         $data = [
             'cer_data' => base64_encode($certificado->cer()),
@@ -172,7 +172,7 @@ class BliqStampApi
         $resultData = $this->post('certificado_registrar', $data);
 
         if (empty($resultData['success'])) {
-            throw new BliqStampApiException($resultData['message'] ?? 'Error no especificado');
+            throw new BliqApiException($resultData['message'] ?? 'Error no especificado');
         }
     }
 
@@ -233,7 +233,7 @@ class BliqStampApi
         curl_close($ch);
 
         if (!empty($err)) {
-            throw new BliqStampApiException('Respuesta no válida: ' . $err, 30);
+            throw new BliqApiException('Respuesta no válida: ' . $err, 30);
         }
 
         $json = self::parseResponse($response);
@@ -245,13 +245,13 @@ class BliqStampApi
     private static function parseResponse($response): array
     {
         if (null === $response || '' === $response) {
-            throw new BliqStampApiException('Respuesta no válida: vacía', 31);
+            throw new BliqApiException('Respuesta no válida: vacía', 31);
         }
 
         $json = json_decode($response, true);
 
         if (null === $json) {
-            throw new BliqStampApiException('Respuesta no válida: ' . $response, 32);
+            throw new BliqApiException('Respuesta no válida: ' . $response, 32);
         }
 
         return $json;
@@ -262,7 +262,7 @@ class BliqStampApi
         if (true !== $response['success']) {
             // $errMsg = $response['error_message'] ?? 'Solicitud no exitosa';
             $errMsg = $response['error_message'] ?? $response['errors'][0]['description'] ?? 'Solicitud no exitosa';
-            $exception = new BliqStampApiException($errMsg, 20);
+            $exception = new BliqApiException($errMsg, 20);
             $exception->setErrors($response['errors'] ?? []);
             throw $exception;
         }

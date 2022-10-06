@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Bliq\Stamp\Result;
+namespace Bliq\Api\StampResults;
 
 use DateTime;
 
-class CancelarCfdiResult
+class CancelCfdiResult
 {
     /**
      * @var DateTime

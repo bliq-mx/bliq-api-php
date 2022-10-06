@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Bliq\Stamp\ValueObject;
+namespace Bliq\Api\ValueObject;
 
 class Certificado
 {

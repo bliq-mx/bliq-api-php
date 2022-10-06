@@ -19,10 +19,9 @@ composer require bliq-mx/bliq-api-php
 
 declare(strict_types=1);
 
-use Bliq\Stamp\BliqStampApi;
-use Bliq\Stamp\BliqStampApiException;
+use Bliq\Stamp\BliqApiException;
+use Bliq\Stamp\Exception\BliqStampApi;
 use Bliq\Stamp\ValueObject\Certificado;
-use DomainException;
 
 $apiToken = 'token';
 $devMode = true;
@@ -35,7 +34,7 @@ try {
     $api->firmarManifiesto($certificado);
 
     echo 'OK';
-} catch (BliqStampApiException $e) {
+} catch (BliqApiException $e) {
     echo $e->getMessage();
 }
 ```
