@@ -125,6 +125,7 @@ class BliqMessagingApi
     private function executeRequest($ch): array
     {
         $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         $err = curl_error($ch);
         curl_close($ch);
 
@@ -134,7 +135,6 @@ class BliqMessagingApi
 
         $json = self::parseResponse($response);
 
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $this->assertIsSuccessResponse($httpCode, $json);
 
         return $json;
