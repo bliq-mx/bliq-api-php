@@ -6,6 +6,7 @@ namespace Bliq\Api;
 
 use Bliq\Api\Exception\BliqApiException;
 use Bliq\Api\MessagingResults\SendResult;
+use Bliq\Api\ValueObject\WhatsAppTemplate;
 
 class BliqMessagingApi
 {
@@ -52,12 +53,34 @@ class BliqMessagingApi
      * Envía un mensaje a WhatsApp
      * @throws BliqApiException
      */
+    /**
+     * Envía un mensaje a WhatsApp con texto libre
+     * @throws BliqApiException
+     */
     public function sendWhatsAppMessage(string $number, string $message): SendResult
     {
         return $this->sendMessage([
             'type' => 'WhatsApp',
             'number' => $number,
             'message' => $message,
+            'token' => $this->token,
+        ]);
+    }
+
+    /**
+     * Envía un mensaje a WhatsApp con una plantilla
+     * @throws BliqApiException
+     */
+    public function sendWhatsAppTemplate(string $number, WhatsAppTemplate $template): SendResult
+    {
+        return $this->sendMessage([
+            'type' => 'WhatsApp',
+            'number' => $number,
+            'template' => [
+                'name' => $template->name(),
+                'language' => $template->language(),
+                'components' => $template->components(),
+            ],
             'token' => $this->token,
         ]);
     }
