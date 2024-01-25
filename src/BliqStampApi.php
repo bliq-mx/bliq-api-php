@@ -48,6 +48,21 @@ class BliqStampApi
     }
 
     /**
+     * Crea y obtiene el XML de un CFDI utilizando los datos del certificado.
+     * @throws BliqApiException
+     */
+    public function createXmlWithCertFiles(array $comprobante, Certificado $certificado): array
+    {
+        $params = [
+            'Comprobante' => $comprobante,
+            'cer_data' => $certificado->cer(),
+            'key_data' => $certificado->key(),
+            'key_passphrase' => $certificado->passphrase(),
+        ];
+        return $this->post('crear_xml', $params);
+    }
+
+    /**
      * Realiza la creación y el timbrado de un CFDI utilizando los datos del certificado.
      * @throws BliqApiException
      */
