@@ -9,25 +9,18 @@ use DateTime;
 class CancelCfdiResult
 {
     /**
-     * @var DateTime
+     * @var array
      */
-    private $date;
-
-    /**
-     * @var string|null
-     */
-    private $xml;
+    private $data;
 
     public function __construct(array $response)
     {
-        $data = $response['data'];
-        $this->date = new DateTime($data['fecha_cancelado']);
-        $this->xml = $data['xml'] ?? null;
+        $this->data = $response['data'];
     }
 
     public function date(): DateTime
     {
-        return $this->date;
+        return new DateTime($this->data['fecha_cancelado']);
     }
 
     /**
@@ -35,6 +28,26 @@ class CancelCfdiResult
      */
     public function xml()
     {
-        return $this->xml;
+        return $this->data['xml'];
+    }
+
+    public function peticionPrevia(): bool
+    {
+        return $this->data['peticion_previa'];
+    }
+
+    public function requiereAceptacion(): bool
+    {
+        return $this->data['requiere_aceptacion'];
+    }
+
+    public function esCancelable(): bool
+    {
+        return $this->data['es_cancelable'];
+    }
+
+    public function uuid(): string
+    {
+        return $this->data['uuid'];
     }
 }
