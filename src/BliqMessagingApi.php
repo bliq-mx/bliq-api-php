@@ -13,7 +13,7 @@ class BliqMessagingApi
     /**
      * @var string URL de conexión a la API.
      */
-    const API_BASE_URL = 'https://api.bliq.mx/messaging/';
+    const API_BASE_URL = 'https://api.reeply.mx/messaging/';
 
     /** @var string */
     private $token;

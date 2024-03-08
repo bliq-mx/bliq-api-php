@@ -16,7 +16,7 @@ class BliqStampApi
     /**
      * @var string URL de conexión a la API.
      */
-    const API_BASE_URL = 'https://api.bliq.mx/timbrado/';
+    const API_BASE_URL = 'https://api.reeply.mx/timbrado/';
 
     /** @var string */
     private $token;
