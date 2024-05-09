@@ -1,6 +1,6 @@
 {
     "name": "bliq-mx/bliq-api-php",
-    "version": "1.3.1",
+    "version": "1.3.2",
     "description": "Biblioteca para conectar con la API de timbrado de Reeply",
     "keywords": ["sat", "cfdi", "timbrado"],
     "homepage": "https://github.com/bliq-mx/bliq-stamp-api",

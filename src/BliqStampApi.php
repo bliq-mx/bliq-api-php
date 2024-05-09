@@ -63,6 +63,22 @@ class BliqStampApi
     }
 
     /**
+     * Crea y obtiene el XML de un CFDI utilizando el rfc y número de certificado.
+     * @throws BliqApiException
+     */
+    public function createXmlWithCertNumber(array $comprobante, string $certNumber, string $rfc): array
+    {
+        $params = [
+            'Comprobante' => $comprobante,
+            'certificado' => [
+                'numero' => $certNumber,
+                'rfc' => $rfc,
+            ],
+        ];
+        return $this->post('crear_xml', $params);
+    }
+
+    /**
      * Realiza la creación y el timbrado de un CFDI utilizando los datos del certificado.
      * @throws BliqApiException
      */
@@ -79,15 +95,17 @@ class BliqStampApi
     }
 
     /**
-     * Realiza la creación y el timbrado de un CFDI utilizando el número de certificado.
+     * Realiza la creación y el timbrado de un CFDI utilizando el rfc y número de certificado.
      * @throws BliqApiException
      */
     public function createCfdi40WithCertNumber(array $comprobante, string $certNumber, string $rfc): CreateCfdiResult
     {
         $params = [
             'Comprobante' => $comprobante,
-            'numero' => $certNumber,
-            'rfc' => $rfc,
+            'certificado' => [
+                'numero' => $certNumber,
+                'rfc' => $rfc,
+            ],
         ];
         $response = $this->post('crear_cfdi', $params);
         return new CreateCfdiResult($response);
@@ -150,6 +168,25 @@ class BliqStampApi
             'cer_data' => $certData->cer(),
             'key_data' => $certData->key(),
             'key_passphrase' => $certData->passphrase(),
+        ];
+        $response = $this->post('cancelar_cfdi', $data);
+        return new CancelCfdiResult($response);
+    }
+
+    /**
+     * Realiza la cancelación de un CFDI utilizando el número de certificado y el RFC
+     * @throws BliqApiException
+     */
+    public function cancelCfdiWithCertNumber(string $uuid, string $motivo, string $folioSustitucion, string $certNumber, string $rfc): CancelCfdiResult
+    {
+        $data = [
+            'uuid' => $uuid,
+            'motivo' => $motivo,
+            'folio_sustitucion' => $folioSustitucion,
+            'certificado' => [
+                'numero' => $certNumber,
+                'rfc' => $rfc,
+            ],
         ];
         $response = $this->post('cancelar_cfdi', $data);
         return new CancelCfdiResult($response);
