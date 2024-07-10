@@ -229,6 +229,22 @@ class BliqStampApi
     }
 
     /**
+     * Realiza la petición de registro de un RFC para timbrado
+     * @throws BliqApiException
+     */
+    public function registerRfc(string $rfc)
+    {
+        $params = [
+            'rfc' => $rfc,
+        ];
+        $resultData = $this->post('registrar_rfc', $params);
+
+        if (empty($resultData['success'])) {
+            throw new BliqApiException($resultData['message'] ?? 'Error no especificado');
+        }
+    }
+
+    /**
      * Realiza petición por método GET
      * @param string $endpoint Punto al que se hará la petición
      * @param array|null $params Parámetros a incluir en la petición
