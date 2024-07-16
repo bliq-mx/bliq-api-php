@@ -10,6 +10,7 @@ use Bliq\Api\StampResults\CancelCfdiResultV2;
 use Bliq\Api\StampResults\CreateCfdiResult;
 use Bliq\Api\StampResults\CreatePdfResult;
 use Bliq\Api\StampResults\FetchCfdiResult;
+use Bliq\Api\StampResults\StatusCfdiResult;
 use Bliq\Api\ValueObject\Certificado;
 
 class BliqStampApi
@@ -228,6 +229,22 @@ class BliqStampApi
         ];
         $response = $this->post('cancelar_cfdi_v2', $data);
         return new CancelCfdiResultV2($response);
+    }
+
+    /**
+     * Realiza la petición de estatus de un CFDI
+     * @throws BliqApiException
+     */
+    public function statusCfdi(string $uuid, string $rfcEmisor, string $rfcReceptor, string $total): StatusCfdiResult
+    {
+        $data = [
+            'uuid' => $uuid,
+            'rfc_emisor' => $rfcEmisor,
+            'rfc_receptor' => $rfcReceptor,
+            'total' => $total,
+        ];
+        $response = $this->post('estatus_cfdi', $data);
+        return new StatusCfdiResult($response);
     }
 
     /**
