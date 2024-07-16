@@ -6,6 +6,7 @@ namespace Bliq\Api;
 
 use Bliq\Api\Exception\BliqApiException;
 use Bliq\Api\StampResults\CancelCfdiResult;
+use Bliq\Api\StampResults\CancelCfdiResultV2;
 use Bliq\Api\StampResults\CreateCfdiResult;
 use Bliq\Api\StampResults\CreatePdfResult;
 use Bliq\Api\StampResults\FetchCfdiResult;
@@ -190,6 +191,43 @@ class BliqStampApi
         ];
         $response = $this->post('cancelar_cfdi', $data);
         return new CancelCfdiResult($response);
+    }
+
+    /**
+     * Realiza la cancelación de un CFDI
+     * @throws BliqApiException
+     */
+    public function cancelCfdiV2(string $uuid, string $motivo, string $folioSustitucion, Certificado $certData): CancelCfdiResultV2
+    {
+        $data = [
+            'uuid' => $uuid,
+            'motivo' => $motivo,
+            'folio_sustitucion' => $folioSustitucion,
+            'cer_data' => $certData->cer(),
+            'key_data' => $certData->key(),
+            'key_passphrase' => $certData->passphrase(),
+        ];
+        $response = $this->post('cancelar_cfdi_v2', $data);
+        return new CancelCfdiResultV2($response);
+    }
+
+    /**
+     * Realiza la cancelación de un CFDI utilizando el número de certificado y el RFC
+     * @throws BliqApiException
+     */
+    public function cancelCfdiWithCertNumberV2(string $uuid, string $motivo, string $folioSustitucion, string $certNumber, string $rfc): CancelCfdiResultV2
+    {
+        $data = [
+            'uuid' => $uuid,
+            'motivo' => $motivo,
+            'folio_sustitucion' => $folioSustitucion,
+            'certificado' => [
+                'numero' => $certNumber,
+                'rfc' => $rfc,
+            ],
+        ];
+        $response = $this->post('cancelar_cfdi_v2', $data);
+        return new CancelCfdiResultV2($response);
     }
 
     /**
