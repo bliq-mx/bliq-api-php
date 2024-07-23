@@ -204,9 +204,11 @@ class BliqStampApi
             'uuid' => $uuid,
             'motivo' => $motivo,
             'folio_sustitucion' => $folioSustitucion,
-            'cer_data' => $certData->cer(),
-            'key_data' => $certData->key(),
-            'key_passphrase' => $certData->passphrase(),
+            'certificado' => [
+                'cer' => $certData->cer(),
+                'key' => $certData->key(),
+                'pwd' => $certData->passphrase(),
+            ],
         ];
         $response = $this->post('cancelar_cfdi_v2', $data);
         return new CancelCfdiResultV2($response);
