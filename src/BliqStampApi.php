@@ -7,6 +7,7 @@ namespace Bliq\Api;
 use Bliq\Api\Exception\BliqApiException;
 use Bliq\Api\StampResults\CancelCfdiResult;
 use Bliq\Api\StampResults\CancelCfdiResultV2;
+use Bliq\Api\StampResults\CancelCfdiResultV3;
 use Bliq\Api\StampResults\CreateCfdiResult;
 use Bliq\Api\StampResults\CreatePdfResult;
 use Bliq\Api\StampResults\FetchCfdiResult;
@@ -232,6 +233,63 @@ class BliqStampApi
         $response = $this->post('cancelar_cfdi_v2', $data);
         return new CancelCfdiResultV2($response);
     }
+    /**
+     * Realiza la cancelación de un CFDI
+     * @throws BliqApiException
+     */
+    public function cancelCfdiV3(
+        string $uuid,
+        string $rfcReceptor,
+        string $total,
+        string $motivo,
+        string $folioSustitucion,
+        Certificado $certData
+    ): CancelCfdiResultV3 {
+        $data = [
+            'uuid' => $uuid,
+            'rfc_receptor' => $rfcReceptor,
+            'total' => $total,
+            'motivo' => $motivo,
+            'folio_sustitucion' => $folioSustitucion,
+            'certificado' => [
+                'cer' => $certData->cer(),
+                'key' => $certData->key(),
+                'pwd' => $certData->passphrase(),
+            ],
+        ];
+        $response = $this->post('cancelar_cfdi_v3', $data);
+        return new CancelCfdiResultV3($response);
+    }
+
+    /**
+     * Realiza la cancelación de un CFDI utilizando el número de certificado y el RFC
+     * @throws BliqApiException
+     */
+    public function cancelCfdiWithCertNumberV3(
+        string $uuid,
+        string $rfcReceptor,
+        string $total,
+        string $motivo,
+        string $folioSustitucion,
+        string $certNumber,
+        string $rfc
+    ): CancelCfdiResultV3 {
+        $data = [
+            'uuid' => $uuid,
+            'rfc_receptor' => $rfcReceptor,
+            'total' => $total,
+            'motivo' => $motivo,
+            'folio_sustitucion' => $folioSustitucion,
+            'certificado' => [
+                'numero' => $certNumber,
+                'rfc' => $rfc,
+            ],
+        ];
+        $response = $this->post('cancelar_cfdi_v3', $data);
+        return new CancelCfdiResultV3($response);
+    }
+
+
 
     /**
      * Realiza la petición de estatus de un CFDI
